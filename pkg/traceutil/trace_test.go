@@ -201,8 +201,7 @@ func TestLog(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logPath := filepath.Join(os.TempDir(), fmt.Sprintf("test-log-%d", time.Now().UnixNano()))
-			defer os.RemoveAll(logPath)
+			logPath := filepath.Join(t.TempDir(), fmt.Sprintf("test-log-%d", time.Now().UnixNano()))
 
 			lcfg := zap.NewProductionConfig()
 			lcfg.OutputPaths = []string{logPath}
@@ -282,8 +281,7 @@ func TestLogIfLong(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			logPath := filepath.Join(os.TempDir(), fmt.Sprintf("test-log-%d", time.Now().UnixNano()))
-			defer os.RemoveAll(logPath)
+			logPath := filepath.Join(t.TempDir(), fmt.Sprintf("test-log-%d", time.Now().UnixNano()))
 
 			lcfg := zap.NewProductionConfig()
 			lcfg.OutputPaths = []string{logPath}

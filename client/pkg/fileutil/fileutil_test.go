@@ -72,17 +72,16 @@ func TestCreateDirAll(t *testing.T) {
 }
 
 func TestExist(t *testing.T) {
-	fdir := filepath.Join(os.TempDir(), fmt.Sprint(time.Now().UnixNano()+rand.Int63n(1000)))
+	fdir := filepath.Join(t.TempDir(), fmt.Sprint(time.Now().UnixNano()+rand.Int63n(1000)))
 	os.RemoveAll(fdir)
 	if err := os.Mkdir(fdir, 0666); err != nil {
 		t.Skip(err)
 	}
-	defer os.RemoveAll(fdir)
 	if !Exist(fdir) {
 		t.Fatalf("expected Exist true, got %v", Exist(fdir))
 	}
 
-	f, err := os.CreateTemp(os.TempDir(), "fileutil")
+	f, err := os.CreateTemp(t.TempDir(), "fileutil")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +91,6 @@ func TestExist(t *testing.T) {
 		t.Errorf("exist = %v, want true", g)
 	}
 
-	os.Remove(f.Name())
 	if g := Exist(f.Name()); g {
 		t.Errorf("exist = %v, want false", g)
 	}
@@ -120,11 +118,10 @@ func TestDirEmpty(t *testing.T) {
 }
 
 func TestZeroToEnd(t *testing.T) {
-	f, err := os.CreateTemp(os.TempDir(), "fileutil")
+	f, err := os.CreateTemp(t.TempDir(), "fileutil")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(f.Name())
 	defer f.Close()
 
 	// Ensure 0 size is a nop so zero-to-end on an empty file won't give EINVAL.

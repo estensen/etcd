@@ -40,12 +40,11 @@ var testSnap = &raftpb.Snapshot{
 }
 
 func TestSaveAndLoad(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 	ss := New(zaptest.NewLogger(t), dir)
 	err = ss.save(testSnap)
 	if err != nil {
@@ -62,12 +61,11 @@ func TestSaveAndLoad(t *testing.T) {
 }
 
 func TestBadCRC(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 	ss := New(zaptest.NewLogger(t), dir)
 	err = ss.save(testSnap)
 	if err != nil {
@@ -85,12 +83,11 @@ func TestBadCRC(t *testing.T) {
 }
 
 func TestFailback(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 
 	large := fmt.Sprintf("%016x-%016x-%016x.snap", 0xFFFF, 0xFFFF, 0xFFFF)
 	err = os.WriteFile(filepath.Join(dir, large), []byte("bad data"), 0666)
@@ -119,12 +116,11 @@ func TestFailback(t *testing.T) {
 }
 
 func TestSnapNames(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 	for i := 1; i <= 5; i++ {
 		var f *os.File
 		if f, err = os.Create(filepath.Join(dir, fmt.Sprintf("%d.snap", i))); err != nil {
@@ -148,12 +144,11 @@ func TestSnapNames(t *testing.T) {
 }
 
 func TestLoadNewestSnap(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 	ss := New(zaptest.NewLogger(t), dir)
 	err = ss.save(testSnap)
 	if err != nil {
@@ -212,12 +207,11 @@ func TestLoadNewestSnap(t *testing.T) {
 }
 
 func TestNoSnapshot(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 	ss := New(zaptest.NewLogger(t), dir)
 	_, err = ss.Load()
 	if err != ErrNoSnapshot {
@@ -226,12 +220,11 @@ func TestNoSnapshot(t *testing.T) {
 }
 
 func TestEmptySnapshot(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 
 	err = os.WriteFile(filepath.Join(dir, "1.snap"), []byte(""), 0x700)
 	if err != nil {
@@ -247,12 +240,11 @@ func TestEmptySnapshot(t *testing.T) {
 // TestAllSnapshotBroken ensures snapshotter returns
 // ErrNoSnapshot if all the snapshots are broken.
 func TestAllSnapshotBroken(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 
 	err = os.WriteFile(filepath.Join(dir, "1.snap"), []byte("bad"), 0x700)
 	if err != nil {
@@ -267,12 +259,11 @@ func TestAllSnapshotBroken(t *testing.T) {
 }
 
 func TestReleaseSnapDBs(t *testing.T) {
-	dir := filepath.Join(os.TempDir(), "snapshot")
+	dir := filepath.Join(t.TempDir(), "snapshot")
 	err := os.Mkdir(dir, 0700)
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(dir)
 
 	snapIndices := []uint64{100, 200, 300, 400}
 	for _, index := range snapIndices {

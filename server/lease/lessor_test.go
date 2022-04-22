@@ -44,8 +44,7 @@ const (
 // that is greater than minLeaseTTL.
 func TestLessorGrant(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -107,8 +106,7 @@ func TestLessorGrant(t *testing.T) {
 // from concurrent map writes on 'itemSet'.
 func TestLeaseConcurrentKeys(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -156,8 +154,7 @@ func TestLeaseConcurrentKeys(t *testing.T) {
 // The revoked lease cannot be got from Lessor again.
 func TestLessorRevoke(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -294,7 +291,6 @@ func TestLessorRenewExtendPileup(t *testing.T) {
 	leaseRevokeRate = 10
 
 	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
 	ttl := int64(10)
@@ -341,8 +337,7 @@ func TestLessorRenewExtendPileup(t *testing.T) {
 
 func TestLessorDetach(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -382,8 +377,7 @@ func TestLessorDetach(t *testing.T) {
 // persist backend.
 func TestLessorRecover(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -410,8 +404,7 @@ func TestLessorRecover(t *testing.T) {
 
 func TestLessorExpire(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	testMinTTL := int64(1)
@@ -463,8 +456,7 @@ func TestLessorExpire(t *testing.T) {
 
 func TestLessorExpireAndDemote(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	testMinTTL := int64(1)
@@ -514,8 +506,7 @@ func TestLessorExpireAndDemote(t *testing.T) {
 
 func TestLessorMaxTTL(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
@@ -530,8 +521,7 @@ func TestLessorMaxTTL(t *testing.T) {
 func TestLessorCheckpointScheduling(t *testing.T) {
 	lg := zap.NewNop()
 
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL, CheckpointInterval: 1 * time.Second})
@@ -564,8 +554,7 @@ func TestLessorCheckpointScheduling(t *testing.T) {
 
 func TestLessorCheckpointsRestoredOnPromote(t *testing.T) {
 	lg := zap.NewNop()
-	dir, be := NewTestBackend(t)
-	defer os.RemoveAll(dir)
+	_, be := NewTestBackend(t)
 	defer be.Close()
 
 	le := newLessor(lg, be, clusterLatest(), LessorConfig{MinLeaseTTL: minLeaseTTL})
